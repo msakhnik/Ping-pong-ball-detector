@@ -1,0 +1,4 @@
+nbproject/
+build/
+*.gch
+.dep.inc
