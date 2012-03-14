@@ -21,12 +21,11 @@ public:
 
 private:
     bool _InitCamera();
-    long long _pointer;
-    void _FindBall();
-    void _CounterBall();
+    void _ScanFrame();
+    bool _FindBall();
     void _DrawCircle();
     void _InitFind();
-    void _DestractFind();
+    void _DestructFind();
     void _CheckPosition();
 
 
