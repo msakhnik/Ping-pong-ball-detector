@@ -16,6 +16,7 @@ cBallDetector::cBallDetector()
                     , _old_position(0.0)
                     , _number(0)
                     , _ball_size(0)
+                    , _debug(false)
 {
 }
 
@@ -24,6 +25,8 @@ cBallDetector::~cBallDetector()
 
     cvReleaseCapture(&_capture);
     cvDestroyWindow("MainCamera");
+    if (_debug)
+        cvDestroyWindow("DebugCamera");
     cvReleaseImage(&_img);
     cvReleaseImage(&_gsImage);
     cvReleaseImage(&_img_gray);
@@ -39,6 +42,11 @@ bool cBallDetector::_InitCamera()
         return false;
 
     cvNamedWindow("MainCamera", 1);
+    if (_debug)
+    {
+        cvNamedWindow("DebugCamera", 1);
+        cvMoveWindow("DebugCamera", 100, 100);
+    }
     _center_position = cvGetCaptureProperty(_capture,
                                             CV_CAP_PROP_FRAME_WIDTH) / 2;
 
@@ -53,7 +61,11 @@ void cBallDetector::_CheckPosition()
     {
         _number++;
         _old_position = _center.x;
-        cout << _number << endl;
+        if (_debug)
+        {
+            cerr << "The ball flew through the grid  " << _number << " times" << endl;
+            cerr << "Position is: " << _center.x << ";" << _center.y << endl;
+        }
     }
 }
 
@@ -80,6 +92,7 @@ bool cBallDetector::BeginDetect()
         if (c == 27 || c == 'q' || c == 'Q')
             break;
     }
+    cvReleaseImage(&_img);
 
     return true;
 }
@@ -110,9 +123,11 @@ void cBallDetector::_ScanFrame()
                 ptr1[j * 3 + 2 + i * _gsImage->widthStep] = 0;
             }
         }
+    if (_debug)
+            cvShowImage("DebugCamera", _gsImage);
 
-    if (!_FindBall())
-        cerr << "Ball not found!!!" << endl;
+    if (_FindBall() && _debug)
+        cerr << "Ball detected\n radius is:" << _radius << endl;
 
     _DrawCircle();
 
@@ -188,4 +203,14 @@ void cBallDetector::_DrawCircle()
 int cBallDetector::GetNumber()
 {
     return _number;
+}
+
+void cBallDetector::SetBallSize(int var)
+{
+    _ball_size = var;
+}
+
+void cBallDetector::SetDebug()
+{
+    _debug = true;
 }

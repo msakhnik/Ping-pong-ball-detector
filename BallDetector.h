@@ -18,6 +18,7 @@ public:
     bool BeginDetect();
     int GetNumber();
     void SetBallSize(int);
+    void SetDebug();
 
 private:
     bool _InitCamera();
@@ -41,4 +42,5 @@ private:
     float _old_position;
     int _number;
     int _ball_size;
+    bool _debug;
 };

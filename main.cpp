@@ -20,6 +20,7 @@ static void _ReadHelp(const char *progname)
             "  " << progname <<" [options] \n\n"
             "Options:\n"
             "  -s,--size\t\tSet minimum ball size (Default size=100)\n"
+            "  -d,--debug\t\tSet debug mode\n"
             "  -h,--help\t\tThis help message\n\n"
          << endl;
 }
@@ -28,12 +29,13 @@ int main(int argc, char** argv)
 {
     char const* progname = _Basename(argv[0]);
     int size = 100;
-
+    bool debug = false;
       while (true)
         {
             static struct option long_options[] =
             {
                 { "size",          required_argument, 0, 's' },
+                { "debug",          no_argument, 0, 'd' },
                 { "help",           no_argument,           0, 'h' },
                 { 0, 0, 0, 0 }
             };
@@ -41,7 +43,7 @@ int main(int argc, char** argv)
             int c = 0;
             int option_index = 0;
 
-            c = getopt_long(argc, argv, "s:h",
+            c = getopt_long(argc, argv, "s:dh",
                             long_options, &option_index);
             if (c == -1)
                 break;
@@ -51,6 +53,10 @@ int main(int argc, char** argv)
             case 'h':
                 _ReadHelp(progname);
                 return 0;
+
+            case 'd':
+                debug = true;
+                break;
 
             case 's':
                 size = atoi(optarg);
@@ -71,6 +77,8 @@ int main(int argc, char** argv)
 
         if (size != 100)
             detector.SetBallSize(size);
+        if (debug)
+            detector.SetDebug();
 
         detector.BeginDetect();
         cout << "Number is: \t" << detector.GetNumber() << endl;
