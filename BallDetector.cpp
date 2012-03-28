@@ -81,6 +81,7 @@ bool cBallDetector::BeginDetect()
         _img = cvQueryFrame(_capture);
         if (!_img)
             break;
+        cout <<  cvGetCaptureProperty( _capture, CV_CAP_PROP_FPS) << endl;
 //copy frame in gray style
         _gsImage = cvCreateImage(cvGetSize(_img), 8, 3);
         cvCopy(_img, _gsImage);
