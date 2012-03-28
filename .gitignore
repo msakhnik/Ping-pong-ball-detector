@@ -2,3 +2,12 @@ nbproject/
 build/
 *.gch
 .dep.inc
+/src/.deps/
+Makefile.in
+aclocal.m4
+autom4te.cache/
+configure
+depcomp
+install-sh
+missing
+src/Makefile.in
