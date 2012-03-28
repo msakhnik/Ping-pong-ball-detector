@@ -11,3 +11,7 @@ depcomp
 install-sh
 missing
 src/Makefile.in
+Makefile
+config.log
+config.status
+src/Makefile
