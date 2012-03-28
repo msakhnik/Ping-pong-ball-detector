@@ -35,7 +35,8 @@ static void _ReadHelp(const char *progname)
 {
     cout << "Ping-pong ball detector\n\n"
             "Description:\n"
-            " The program calculates the movement of a tennis ball over the mesh tennis. \n\n"
+            " The program calculates the movement of a tennis ball "
+            "over the mesh tennis. \n\n"
 
             "Synopsis:\n"
             "  " << progname <<" [options] \n\n"
@@ -83,7 +84,8 @@ int main(int argc, char** argv)
                 size = atoi(optarg);
                 if (size < 1 || size > 1000)
                 {
-                    cerr << "Minimum size of the ball! Only 1..1000 range" << endl;
+                    cerr << "Minimum size of the ball! Only 1..1000 range"
+                            << endl;
                     return 1;
                 }
                 break;

@@ -42,6 +42,7 @@ private:
     void _InitFind();
     void _DestructFind();
     void _CheckPosition();
+    void _TransformColor();
 
 
     CvCapture* _capture;

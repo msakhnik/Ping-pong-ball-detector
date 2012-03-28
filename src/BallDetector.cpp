@@ -29,7 +29,7 @@ cBallDetector::cBallDetector()
                     , _center_position(false)
                     , _old_position(0.0)
                     , _number(0)
-                    , _ball_size(0)
+                    , _ball_size(100)
                     , _debug(false)
 {
 }
@@ -94,7 +94,7 @@ bool cBallDetector::BeginDetect()
         _img = cvQueryFrame(_capture);
         if (!_img)
             break;
-        cout <<  cvGetCaptureProperty( _capture, CV_CAP_PROP_FPS) << endl;
+//        cout <<  cvGetCaptureProperty( _capture, CV_CAP_PROP_FPS) << endl;
 //copy frame in gray style
         _gsImage = cvCreateImage(cvGetSize(_img), 8, 3);
         cvCopy(_img, _gsImage);
@@ -111,8 +111,7 @@ bool cBallDetector::BeginDetect()
     return true;
 }
 
-//Find ball on frame
-void cBallDetector::_ScanFrame()
+void cBallDetector::_TransformColor()
 {
     //get access for all points
     uchar* ptr1;
@@ -137,11 +136,18 @@ void cBallDetector::_ScanFrame()
                 ptr1[j * 3 + 2 + i * _gsImage->widthStep] = 0;
             }
         }
+}
+
+//Find ball on frame
+void cBallDetector::_ScanFrame()
+{
+    _TransformColor();
+
     if (_debug)
             cvShowImage("DebugCamera", _gsImage);
 
     if (_FindBall() && _debug)
-        cerr << "Ball detected\n radius is:" << _radius << endl;
+        cerr << "Ball detected\n diameter =  " << _radius * 2 << endl;
 
     _DrawCircle();
 
@@ -171,13 +177,11 @@ bool cBallDetector::_FindBall()
     _InitFind();
     CvSeq* h_next = 0;
     CvSeq* contur = _contours;
-
     if (contur == 0)
     {
         _DestructFind();
         return false;
     }
-
     for( ; contur!=0; contur=contur->h_next )
     {
         if (contur != _contours)
@@ -194,12 +198,10 @@ bool cBallDetector::_FindBall()
         _DestructFind();
         return false;
     }
-
     cvDrawContours(_gsImage, h_next, CV_RGB(255, 0, 0),
                                 CV_RGB(0, 255, 0), 2, 2, CV_AA, cvPoint(0, 0));
     cvMinEnclosingCircle(h_next, &_center, &_radius);
     _DestructFind();
-
     return true;
 }
 // we draw red circle
