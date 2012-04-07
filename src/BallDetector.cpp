@@ -146,8 +146,16 @@ void cBallDetector::_ScanFrame()
     if (_debug)
             cvShowImage("DebugCamera", _gsImage);
 
-    if (_FindBall() && _debug)
-        cerr << "Ball detected\n diameter =  " << _radius * 2 << endl;
+    bool fb = _FindBall();
+
+    BOOST_SCOPE_EXIT(  (fb)(&_storage)(&_img_gray) (&_debug) (&_radius))
+    {
+        if ((fb)  &&  _debug)
+            cerr << "Ball detected\n diameter =  " << _radius * 2 << endl;
+
+        cvReleaseMemStorage(&_storage);
+        cvReleaseImage(&_img_gray);
+    } BOOST_SCOPE_EXIT_END
 
     _DrawCircle();
 
@@ -165,11 +173,6 @@ void cBallDetector::_InitFind()
                    CV_RETR_LIST, CV_CHAIN_APPROX_SIMPLE);
 }
 
-void cBallDetector::_DestructFind()
-{
-    cvReleaseMemStorage(&_storage);
-    cvReleaseImage(&_img_gray);
-}
 // This section find ball with minimum radius
 // and return false when ball not found
 bool cBallDetector::_FindBall()
@@ -178,10 +181,7 @@ bool cBallDetector::_FindBall()
     CvSeq* h_next = 0;
     CvSeq* contur = _contours;
     if (contur == 0)
-    {
-        _DestructFind();
         return false;
-    }
     for( ; contur!=0; contur=contur->h_next )
     {
         if (contur != _contours)
@@ -194,14 +194,10 @@ bool cBallDetector::_FindBall()
     }
     _center.x = -1;
     if (h_next->total < _ball_size)
-    {
-        _DestructFind();
         return false;
-    }
     cvDrawContours(_gsImage, h_next, CV_RGB(255, 0, 0),
                                 CV_RGB(0, 255, 0), 2, 2, CV_AA, cvPoint(0, 0));
     cvMinEnclosingCircle(h_next, &_center, &_radius);
-    _DestructFind();
     return true;
 }
 // we draw red circle

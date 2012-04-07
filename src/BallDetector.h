@@ -24,6 +24,7 @@
 #include <cv.h>
 #include <highgui.h>
 #include <cxcore.h>
+#include <boost/scope_exit.hpp>
 
 class cBallDetector {
 public:
@@ -40,7 +41,6 @@ private:
     bool _FindBall();
     void _DrawCircle();
     void _InitFind();
-    void _DestructFind();
     void _CheckPosition();
     void _TransformColor();
 
