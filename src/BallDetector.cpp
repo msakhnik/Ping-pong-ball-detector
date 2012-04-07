@@ -211,18 +211,3 @@ void cBallDetector::_DrawCircle()
         cvCircle(_img, p, _radius, CV_RGB(255, 0, 0), 3, 8, 0);
     }
 }
-
-int cBallDetector::GetNumber()
-{
-    return _number;
-}
-
-void cBallDetector::SetBallSize(int var)
-{
-    _ball_size = var;
-}
-
-void cBallDetector::SetDebug()
-{
-    _debug = true;
-}

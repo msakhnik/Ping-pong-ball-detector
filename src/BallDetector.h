@@ -31,9 +31,9 @@ public:
     cBallDetector();
     ~cBallDetector();
     bool BeginDetect();
-    int GetNumber();
-    void SetBallSize(int);
-    void SetDebug();
+    int GetNumber() { return _number; };
+    void SetBallSize(int var) { _ball_size = var; };
+    void SetDebug() { _debug = true; };
 
 private:
     bool _InitCamera();
